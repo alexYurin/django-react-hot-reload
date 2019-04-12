@@ -1,0 +1,8 @@
+__pycache__/
+.vscode/
+node_modules/
+media/
+builds/
+builds-dev/
+frontend/webpack/webpack-stats.production.json
+frontend/webpack/webpack-stats.dev.json
