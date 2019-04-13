@@ -2516,6 +2516,17 @@ domutils@^1.5.1:
     dom-serializer "0"
     domelementtype "1"
 
+drf-redux-auth@^0.2.6:
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/drf-redux-auth/-/drf-redux-auth-0.2.6.tgz#97ca2c95ece70bad2f67fb24a8c752174416d39f"
+  integrity sha1-l8osleznC60vZ/skqMdSF0QW058=
+  dependencies:
+    prop-types "^15.6.1"
+    react "^16.4.1"
+    react-dom "^16.4.1"
+    redux "^4.0.0"
+    redux-thunk "^2.3.0"
+
 duplexify@^3.4.2, duplexify@^3.6.0:
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/duplexify/-/duplexify-3.7.1.tgz#2a4df5317f6ccfd91f86d6fd25d8d8a103b88309"
@@ -5620,7 +5631,7 @@ rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-dom@^16.8.4:
+react-dom@^16.4.1, react-dom@^16.8.4:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.8.6.tgz#71d6303f631e8b0097f56165ef608f051ff6e10f"
   integrity sha512-1nL7PIq9LTL3fthPqwkvr2zY7phIPjYrT0jp4HjyEQrEROnw4dG41VVwi/wfoCneoleqrNX7iAD+pXebJZwrwA==
@@ -5701,7 +5712,7 @@ react-router@5.0.0:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
-react@^16.8.4:
+react@^16.4.1, react@^16.8.4:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react/-/react-16.8.6.tgz#ad6c3a9614fd3a4e9ef51117f54d888da01f2bbe"
   integrity sha512-pC0uMkhLaHm11ZSJULfOBqV4tIZkx87ZLvbbQYunNixAAvjnC+snJCg0XQXn9VIsttVsbZP/H/ewzgsd5fxKXw==

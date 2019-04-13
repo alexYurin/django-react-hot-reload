@@ -1,3 +1,5 @@
+from rest_framework.authtoken.views import obtain_auth_token
+from django.views.decorators.csrf import csrf_exempt
 from django.urls import path
 from . import views
 
@@ -15,7 +17,7 @@ user_detail = views.UserViewSet.as_view({
 })
 
 urlpatterns = [
+    path('token-auth', csrf_exempt(obtain_auth_token)),
     path('users', user_list, name='users-list'),
     path('users/<int:pk>', user_detail, name='user-detail'),
-    path('auth', views.auth, name='user-auth')
 ]

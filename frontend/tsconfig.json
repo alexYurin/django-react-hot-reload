@@ -1,9 +1,11 @@
 { 
   "include": [
     "/**/*.ts",
-    "/**/*.tsx"
+    "/**/*.tsx",
   ],
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": { "*": ["./kernel/types/*"] },
     "allowSyntheticDefaultImports": false,
     "target": "es6",
     "downlevelIteration": true,

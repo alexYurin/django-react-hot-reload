@@ -27,6 +27,7 @@ module.exports = merge(common, {
       'process.env': {
         NODE_ENV: JSON.stringify('production'),
         BASE_URL: JSON.stringify('http://0.0.0.0/'),
+        REACT_APP_AUTH_URL: JSON.stringify('api/v1/token-auth/'),
       }
     }),
   ],

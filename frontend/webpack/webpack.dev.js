@@ -37,6 +37,7 @@ const config = merge(common, {
       'process.env': {
         NODE_ENV: JSON.stringify('development'),
         BASE_URL: JSON.stringify('http://0.0.0.0:8000/'),
+        REACT_APP_AUTH_URL: JSON.stringify('api/v1/token-auth/'),
       }
     })
   ]
