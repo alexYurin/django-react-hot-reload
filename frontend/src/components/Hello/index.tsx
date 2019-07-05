@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 import { Container, Header, Form, Button } from 'semantic-ui-react';
-import { loginUser, logoutUser } from "drf-redux-auth";
+import CSRFToken from '../CSRFToken';
 import styled from 'styled-components';
+import { login } from '../../Store/auth/auth.actions'
 
 const djangoLogo = require('../../../images/logos/django.png');
 const reactLogo = require('../../../images/logos/react.png');
@@ -11,46 +12,25 @@ const routerLogo = require('../../../images/logos/router.png');
 const webpackLogo = require('../../../images/logos/webpack.png');
 const typescriptLogo = require('../../../images/logos/typescript.png');
 
-const DjangoIcon = styled.img`
-  width: 90px;
-`;
-
-const WebpackIcon = styled.img`
-  width: 40px;
-`;
-
-const ReactIcon = styled.img`
-  width: 40px;
-`;
-
-const ReduxIcon = styled.img`
-  width: 40px;
-`;
-
-const RouterIcon = styled.img`
-  width: 60px;
-`;
-
-const TypescriptIcon = styled.img`
-  width: 40px;
+const Icon = styled.img`
+  width: ${props => props.width || 'auto'};
 `;
 
 const IconsContainer = styled.div`
   display: flex;
+  flex-flow: row wrap;
   justify-content: center;
   align-items: center;
   margin: 20px 0 40px;
 
   img {
     margin: 5px 20px;
-  }
-
-  img:nth-child(1) {
-    margin-left: 0;
-  }
-
-  img:nth-last-child(1) {
-    margin-right: 0;
+    &:first-child {
+      margin-left: 0;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
   }
 `;
 
@@ -84,26 +64,24 @@ const Text = styled.p`
   color: #fafafa;
 `;
 
-namespace Mode {
-  export interface IProps {
-    mode: string;
-  };
-}
+type Mode = {
+  mode: string;
+};
 
-const ModeDisplay = styled.p<Mode.IProps>`
+const ModeDisplay = styled.p<Mode>`
   font-weight: bold;
   font-size: 1em;
   color: ${props => props.mode === 'development' ? '#ffcc80' : '#69f0ae'};
 `;
 
-export interface IProps {
+interface IProps {
   auth: any;
-  loginUser: (e: any) => void;
+  login: (e: any) => void;
 };
 
 class Hello extends React.Component<IProps, {}> {
   state = {
-    auth_user: false as boolean,
+    auth: false as boolean,
     username: '' as string,
     password: '' as string,
   };
@@ -116,11 +94,10 @@ class Hello extends React.Component<IProps, {}> {
 
   handleLoginClick = () => {
     const { username, password } = this.state;
-    const creds = {
-      username: username.trim(),
-      password: password.trim()
-    };
-    this.props.loginUser(creds);
+    this.props.login({
+      username,
+      password
+    })
   };
 
   render() {
@@ -130,32 +107,15 @@ class Hello extends React.Component<IProps, {}> {
     return (
       <Wrapper>
         <Container
-          textAlign="center"
+          textAlign='center'
         >
           <IconsContainer>
-            <DjangoIcon
-              src={djangoLogo}
-              alt="logo"
-            />
-            <WebpackIcon
-              src={webpackLogo}
-              alt="logo"
-            />
-            <ReactIcon
-              src={reactLogo}
-              alt="logo"
-            />
-            <ReduxIcon
-              src={reduxLogo}
-              alt="logo"
-            />
-            <RouterIcon
-              src={routerLogo}
-              alt="logo"
-            />
-            <TypescriptIcon
-              src={typescriptLogo}
-            />
+            <Icon src={djangoLogo} alt='Django' width='90px' />
+            <Icon src={webpackLogo} alt='Webpack' width='40px'/>
+            <Icon src={reactLogo} alt='React' width='40px'/>
+            <Icon src={reduxLogo} alt='Redux' width='40px' />
+            <Icon src={routerLogo} alt='Router' width='60px' />
+            <Icon src={typescriptLogo} alt='Typescript' width='40px' />
           </IconsContainer>
           <Greeting as='h1'>Welcome to the Django app with React!</Greeting>
           <Text>
@@ -169,6 +129,7 @@ class Hello extends React.Component<IProps, {}> {
             }
           </ModeDisplay>
           <AuthForm>
+            <CSRFToken />
             <FormGroup>
               <Form.Input
                 width={5}
@@ -179,7 +140,7 @@ class Hello extends React.Component<IProps, {}> {
             </FormGroup>
             <FormGroup>
               <Form.Input
-                type="password"
+                type='password'
                 width={5}
                 placeholder='Password'
                 value={password ? password : ''}
@@ -203,8 +164,7 @@ const mapStateToProps = (state: any) => ({
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-  loginUser: (creds: any) => dispatch(loginUser(creds)),
-  logoutUser: () => dispatch(logoutUser())
+  login: (params: object) => dispatch(login(params)),
 });
 
 export default connect(
