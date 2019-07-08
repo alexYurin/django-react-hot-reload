@@ -50,9 +50,6 @@ INSTALLED_APPS = [
     # Development enviroment
     'webpack_loader',
 
-    # Auth
-    'rest_framework.authtoken',
-
     # API
     'rest_framework',
     'api_v1',
@@ -60,11 +57,19 @@ INSTALLED_APPS = [
 
 # Django rest framework 
 REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-    )
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+# Json Web Token Auth
+JWT_AUTH = {
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'core.utils.my_jwt_response_handler'
 }
 
 

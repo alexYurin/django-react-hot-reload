@@ -1,4 +1,4 @@
-import { authConstants } from '../../config/constants/auth.constants';
+import { authConstants } from '../../constants/auth.constants';
 import { api } from './auth.api';
 
 export const login = (params: object) => async (dispatch: any) => {
@@ -7,16 +7,14 @@ export const login = (params: object) => async (dispatch: any) => {
   });
 
   try {
-    const response = await api.login(params);
-
-    console.log(response)
+    const response = await api.login(params).then(response => (
+      response
+    ))
 
     dispatch({
       type: authConstants.LOGIN_SUCCESS,
       user: response,
     });
-    //await AsyncStorage.setItem('user', JSON.stringify(user));
-    //return user;
   } catch (error) {
     dispatch({
       type: authConstants.LOGIN_FAILURE,

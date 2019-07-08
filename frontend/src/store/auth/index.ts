@@ -1,5 +1,5 @@
-import { authConstants } from '../../config/constants/auth.constants';
-import { IAuth } from '../../config/models/user.model';
+import { authConstants } from '../../constants/auth.constants';
+import { IAuth } from '../../models/user.model';
 
 type Action = {
   type: string;

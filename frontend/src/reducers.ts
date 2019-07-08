@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
-import { auth } from './Store/auth';
+import { auth } from './store/auth';
 
 const rootReducer = (history: any) => combineReducers({
   auth,

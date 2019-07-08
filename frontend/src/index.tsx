@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 
 import Root from './Root';
-import configureStore, { history } from './Store';
+import configureStore, { history } from './store';
 import '../styles';
 
 const initialState = {};

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Container, Header, Form, Button } from 'semantic-ui-react';
 import CSRFToken from '../CSRFToken';
 import styled from 'styled-components';
-import { login } from '../../Store/auth/auth.actions'
+import { login } from '../../store/auth/auth.actions'
 
 const djangoLogo = require('../../../images/logos/django.png');
 const reactLogo = require('../../../images/logos/react.png');
@@ -81,7 +81,7 @@ interface IProps {
 
 class Hello extends React.Component<IProps, {}> {
   state = {
-    auth: false as boolean,
+    auth: localStorage.getItem('token') ? true : false as boolean,
     username: '' as string,
     password: '' as string,
   };
@@ -92,8 +92,10 @@ class Hello extends React.Component<IProps, {}> {
     })
   }
 
-  handleLoginClick = () => {
+  handleLogin = (e: any) => {
+    e.preventDefault();
     const { username, password } = this.state;
+    
     this.props.login({
       username,
       password
@@ -128,7 +130,7 @@ class Hello extends React.Component<IProps, {}> {
               'in production mode'
             }
           </ModeDisplay>
-          <AuthForm>
+          <AuthForm onSubmit={this.handleLogin}>
             <CSRFToken />
             <FormGroup>
               <Form.Input
@@ -147,12 +149,11 @@ class Hello extends React.Component<IProps, {}> {
                 onChange={event => this.handleInputs(event.target.value, 'password')}
               />
             </FormGroup>
+            <Button
+              color='green'
+              content='Submit'
+            />
           </AuthForm>
-          <Button
-            color='green'
-            content='Submit'
-            onClick={this.handleLoginClick}
-          />
         </Container>
       </Wrapper>
     )
