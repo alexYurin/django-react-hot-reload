@@ -53,23 +53,30 @@ INSTALLED_APPS = [
     # API
     'rest_framework',
     'api_v1',
+
+    # Auth
+    'authentication',
 ]
+
+AUTH_USER_MODEL = 'authentication.User'
 
 # Django rest framework 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'core.authentication.backends.JWTAuthentication',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
+    'EXCEPTION_HANDLER': 'core.exceptions.core_exception_handler',
+    'NON_FIELD_ERRORS_KEY': 'error',
 }
 
 # Json Web Token Auth
 JWT_AUTH = {
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 'core.utils.my_jwt_response_handler'
+    #'JWT_RESPONSE_PAYLOAD_HANDLER': 'core.utils.my_jwt_response_handler'
 }
 
 
@@ -142,7 +149,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'django_db',
         'USER' : 'admin',
-        'PASSWORD' : 'ecommerce_admin',
+        'PASSWORD' : 'django_admin',
         'HOST' : '127.0.0.1',
         'PORT' : '5432',
     }
