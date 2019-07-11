@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { apiConstants } from '../constants/api.constants';
+import { apiConstants } from './constants/api.constants';
 
 const http = axios.create({
   headers: {'Content-Type': 'application/json'},

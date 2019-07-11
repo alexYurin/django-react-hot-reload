@@ -1,18 +1,19 @@
 import { routerMiddleware } from 'connected-react-router';
-import { createStore, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension/logOnlyInProduction';
 import thunk from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import { createBrowserHistory } from 'history';
 
 import rootReducer from '../reducers';
 
-const development = process.env.NODE_ENV !== 'production';
-
 export const history = createBrowserHistory();
+
+const development = process.env.NODE_ENV !== 'production';
 
 // Function to call to configure Redux store
 const configureStore = (initialState: any) => {
-  const enhancer = compose(
+  const enhancer =  composeWithDevTools(
     // Middleware you want to use in development
     development ?
     applyMiddleware(thunk, createLogger()) :

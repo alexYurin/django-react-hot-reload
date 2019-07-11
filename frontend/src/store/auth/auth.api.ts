@@ -1,13 +1,17 @@
-import { http } from '../../config/api';
+import { http } from '../../api';
 import { apiConstants } from '../../constants/api.constants';
-
-http.defaults.xsrfCookieName = 'csrftoken';
-http.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 export const api = {
   login: async (params: object) => {
-    return await http.post(apiConstants.AUTH_TOKEN, {
-      body: JSON.stringify(params)
+    return await http.post(`${apiConstants.AUTH}${apiConstants.LOGIN}`, {
+      user: params
+    })
+  },
+  token: async (token: string) => {
+    return await http.post(`${apiConstants.AUTH}${apiConstants.USER}`, {
+      headers: {
+        Authorization: `JWT ${token}`
+      }
     })
   },
 };

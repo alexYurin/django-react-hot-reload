@@ -5,20 +5,48 @@ export const login = (params: object) => async (dispatch: any) => {
   dispatch({
     type: authConstants.LOGIN_REQUEST,
   });
-
-  try {
-    const response = await api.login(params).then(response => (
-      response
-    ))
-
+  
+  await api.login(params).then(({ data: { user: user } }) => {
+    
     dispatch({
       type: authConstants.LOGIN_SUCCESS,
-      user: response,
+      user: {
+        email: user.email,
+        username: user.username
+      },
     });
-  } catch (error) {
+    localStorage.setItem('token', user.token);    
+
+  }).catch(error => {
+    
     dispatch({
       type: authConstants.LOGIN_FAILURE,
       error: error.message,
     });
-  }
+    
+  })
+};
+
+export const logout = () => (dispatch: any) => {
+  dispatch({
+    type: authConstants.LOGOUT,
+  });
+  localStorage.removeItem('token')
+};
+
+export const checkUser = () => async (dispatch: any) => {
+  dispatch({
+    type: authConstants.LOGIN_REQUEST,
+  });
+
+  const token = localStorage.getItem('token');
+
+  await api.token(token).then(res => {
+    console.log(res)
+  }).catch(error => {
+    dispatch({
+      type: authConstants.LOGIN_FAILURE,
+      error: error.message,
+    });
+  })
 };
