@@ -4,30 +4,57 @@ from django.contrib.auth import authenticate
 from .models import User
 
 
-class RegistrationSerializer(serializers.ModelSerializer):
-    """Сериализует запросы на регистрацию и создаёт нового пользователя."""
+class UserSerializer(serializers.ModelSerializer):
+    """Класс осуществляет сериализацию и десериализацию объектов User."""
 
-    # Указываем, что пароль должен быть не менее 8 символов, 
-    # не более 128 символов и не может быть прочитан клиентом    
+    # Длина пароля должна быть не менее 8 символов, но не более 128 
+    # символов. Эти значения по умолчанию заданы в Django. Мы могли бы изменить их, но это бы
+    # дополнительных усилий, не давая никаких преимуществ, поэтому давайте будем использовать
+    # значения по умолчанию.
     password = serializers.CharField(
         max_length=128,
         min_length=8,
         write_only=True
     )
 
-    # У клиента не должно быть возможности посылать токен при запросе на регистрацию.
-    # Для этого мы передаём в `token` параметр read-only.
-    token = serializers.CharField(max_length=255, read_only=True)
-
     class Meta:
         model = User
-        # Здесь перечисляются все поля, которые могут быть включаны в запрос или ответ
-        # с учетом явно указанных выше полей.         
-        fields = ['email', 'username', 'password', 'token']
+        fields = ('email', 'username', 'password', 'token',)
 
-    def create(self, validated_data):
-        # Используем метод `create_user`? написанный ранее для создания нового пользователя.
-        return User.objects.create_user(**validated_data)
+        # Свойство `read_only_fields` - это альтернатива явного указания атрибута 
+        # `read_only=True` для поля как мы делали выше для пароля.
+        # Причина, по которой мы хотим использовать `read_only_fields` здесь заключается в том,
+        # что нам не нужно указывать какие-либо дополнительные атрибуты для поля. 
+        # Полю password нужны были атрибуты `min_length` и
+        # `max_length`, в отличие от поля token.
+        read_only_fields = ('token',)
+
+
+    def update(self, instance, validated_data):
+        """Осуществляет обновление модели User."""
+
+        # Для паролей не должен использоваться метод `setattr`, в отличие от других полей.
+        # Это связано с тем, что Django предоставляет функцию, которая осуществляет хэширование  
+        # и добавление солей к паролям, что важно для безопасности приложения. Это означает, что мы должны
+        # удалить поле password из словаря `validated_data`, прежде чем обработать данные, хранящиеся в нём.  
+        password = validated_data.pop('password', None)
+
+        for (key, value) in validated_data.items():
+            # Для ключей, оставшихся в `validated_data`, мы присвоим их значения атрибутам 
+            # текущего экземпляра `User`.
+            setattr(instance, key, value)
+
+        if password is not None:
+            # Метод `.set_password()` осуществляет все необходимые операции 
+            # для безопасного сохранения пароля, освобождая нас от необходимости заниматься этим.
+            instance.set_password(password)
+            
+        # После обновления всех полей, мы должны явно сохранить 
+        # модель. Стоит отметить, что метод `.set_password()` не сохраняет
+        # модель.
+        instance.save()
+
+        return instance
 
 
 class LoginSerializer(serializers.Serializer):
@@ -88,54 +115,27 @@ class LoginSerializer(serializers.Serializer):
         }
 
 
-class UserSerializer(serializers.ModelSerializer):
-    """Класс осуществляет сериализацию и десериализацию объектов User."""
+class RegistrationSerializer(serializers.ModelSerializer):
+    """Сериализует запросы на регистрацию и создаёт нового пользователя."""
 
-    # Длина пароля должна быть не менее 8 символов, но не более 128 
-    # символов. Эти значения по умолчанию заданы в Django. Мы могли бы изменить их, но это бы
-    # дополнительных усилий, не давая никаких преимуществ, поэтому давайте будем использовать
-    # значения по умолчанию.
+    # Указываем, что пароль должен быть не менее 8 символов, 
+    # не более 128 символов и не может быть прочитан клиентом    
     password = serializers.CharField(
         max_length=128,
         min_length=8,
         write_only=True
     )
 
+    # У клиента не должно быть возможности посылать токен при запросе на регистрацию.
+    # Для этого мы передаём в `token` параметр read-only.
+    token = serializers.CharField(max_length=255, read_only=True)
+
     class Meta:
         model = User
-        fields = ('email', 'username', 'password', 'token',)
+        # Здесь перечисляются все поля, которые могут быть включаны в запрос или ответ
+        # с учетом явно указанных выше полей.         
+        fields = ['email', 'username', 'password', 'token']
 
-        # Свойство `read_only_fields` - это альтернатива явного указания атрибута 
-        # `read_only=True` для поля как мы делали выше для пароля.
-        # Причина, по которой мы хотим использовать `read_only_fields` здесь заключается в том,
-        # что нам не нужно указывать какие-либо дополнительные атрибуты для поля. 
-        # Полю password нужны были атрибуты `min_length` и
-        # `max_length`, в отличие от поля token.
-        read_only_fields = ('token',)
-
-
-    def update(self, instance, validated_data):
-        """Осуществляет обновление модели User."""
-
-        # Для паролей не должен использоваться метод `setattr`, в отличие от других полей.
-        # Это связано с тем, что Django предоставляет функцию, которая осуществляет хэширование  
-        # и добавление солей к паролям, что важно для безопасности приложения. Это означает, что мы должны
-        # удалить поле password из словаря `validated_data`, прежде чем обработать данные, хранящиеся в нём.  
-        password = validated_data.pop('password', None)
-
-        for (key, value) in validated_data.items():
-            # Для ключей, оставшихся в `validated_data`, мы присвоим их значения атрибутам 
-            # текущего экземпляра `User`.
-            setattr(instance, key, value)
-
-        if password is not None:
-            # Метод `.set_password()` осуществляет все необходимые операции 
-            # для безопасного сохранения пароля, освобождая нас от необходимости заниматься этим.
-            instance.set_password(password)
-            
-        # После обновления всех полей, мы должны явно сохранить 
-        # модель. Стоит отметить, что метод `.set_password()` не сохраняет
-        # модель.
-        instance.save()
-
-        return instance
+    def create(self, validated_data):
+        # Используем метод `create_user`? написанный ранее для создания нового пользователя.
+        return User.objects.create_user(**validated_data)

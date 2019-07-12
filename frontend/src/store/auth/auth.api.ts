@@ -2,15 +2,15 @@ import { http } from '../../api';
 import { apiConstants } from '../../constants/api.constants';
 
 export const api = {
-  login: async (params: object) => {
+  login: async (params: any) => {
     return await http.post(`${apiConstants.AUTH}${apiConstants.LOGIN}`, {
       user: params
     })
   },
-  token: async (token: string) => {
-    return await http.post(`${apiConstants.AUTH}${apiConstants.USER}`, {
+  get_current_user: async (token: any) => {
+    return await http.get(`${apiConstants.AUTH}${apiConstants.USER}`, {
       headers: {
-        Authorization: `JWT ${token}`
+        Authorization: `Token ${token}`
       }
     })
   },

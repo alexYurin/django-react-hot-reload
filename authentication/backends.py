@@ -11,6 +11,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
     authentication_header_prefix = 'Token'
 
     def authenticate(self, request):
+        print('USER IS {}'.format('NOT'))
         """
         Метод `authenticate` вызывается для каждого запроса независимо от того требует
         ли конечная точка, чтобы пользователь был аутентифицирован.        
@@ -91,5 +92,5 @@ class JWTAuthentication(authentication.BaseAuthentication):
             # Учетная запись этого пользователя была деактивирована.
             msg = 'This user has been deactivated.'
             raise exceptions.AuthenticationFailed(msg)
-
+            
         return (user, token)

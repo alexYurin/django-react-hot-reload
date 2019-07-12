@@ -6,13 +6,12 @@ import StackIcons from './StackIcons';
 import AuthLoginForm from './AuthLoginForm';
 import { Wrapper, AuthForm, ModeDisplay, Greeting, Text } from './style';
 
-import { login, logout, checkUser } from '../../store/auth/auth.actions';
+import { login, logout } from '../../store/auth/auth.actions';
 
 interface IProps {
   auth: any;
-  login: (e: any) => void;
+  login: (e?: any) => void;
   logout: () => void;
-  checkUser: () => void;
 };
 
 class Hello extends React.Component<IProps, {}> {
@@ -34,7 +33,7 @@ class Hello extends React.Component<IProps, {}> {
   };
 
   componentDidMount() {
-    this.props.checkUser()
+    if (!this.state.auth) this.props.login();
   }
 
   handleInputs = (value: string, state: string) => {
@@ -121,9 +120,8 @@ const mapStateToProps = (state: any) => ({
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-  login: (params: object) => dispatch(login(params)),
+  login: (params?: object) => dispatch(login(params)),
   logout: () => dispatch(logout()),
-  checkUser: () => dispatch(checkUser()),
 });
 
 export default connect(

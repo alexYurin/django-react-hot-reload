@@ -10,8 +10,9 @@ from .serializers import (
 )
 from .renderers import UserJSONRenderer
 
+
 class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
     renderer_classes = (UserJSONRenderer,)
     serializer_class = UserSerializer
 
@@ -37,6 +38,24 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class LoginAPIView(APIView):
+    permission_classes = (AllowAny,)
+    renderer_classes = (UserJSONRenderer,)
+    serializer_class = LoginSerializer
+
+    def post(self, request):
+        user = request.data.get('user', {})
+
+        # ОБратите внимание на то, что здесь мы не вызываем метод `serializer.save()`,
+        # как делали раньше при создании конечной точки для регистрации.
+        # Это связано с тем, что мы не хотим что-либо сохранять. Метод `validate` нашего 
+        # сериализатора делает всё что нам нужно для реализации входа в систему.        
+        serializer = self.serializer_class(data=user)
+        serializer.is_valid(raise_exception=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class RegistrationAPIView(APIView):
     # Позволяем любому пользователю (аутентифицированному или нет) переходить на эту конечную точку.
     permission_classes = (AllowAny,)
@@ -54,21 +73,3 @@ class RegistrationAPIView(APIView):
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-class LoginAPIView(APIView):
-    permission_classes = (AllowAny,)
-    renderer_classes = (UserJSONRenderer,)
-    serializer_class = LoginSerializer
-
-    def post(self, request):
-        user = request.data.get('user', {})
-
-        # ОБратите внимание на то, что здесь мы не вызываем метод `serializer.save()`,
-        # как делали раньше при создании конечной точки для регистрации.
-        # Это связано с тем, что мы не хотим что-либо сохранять. Метод `validate` нашего 
-        # сериализатора делает всё что нам нужно для реализации входа в систему.        
-        serializer = self.serializer_class(data=user)
-        serializer.is_valid(raise_exception=True)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
