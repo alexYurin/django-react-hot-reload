@@ -43,8 +43,12 @@ export const AuthForm = styled(Form)`
   margin: 30px 0;
 `;
 
-export const FormGroup = styled(Form.Group)`
+export const FormGroup = styled(Form.Field)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  margin: 0 auto;
 `;
 
 export const Text = styled.p`

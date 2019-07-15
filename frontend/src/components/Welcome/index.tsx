@@ -22,12 +22,14 @@ class Hello extends React.Component<IProps, {}> {
     email: '' as string,
     password: '' as string,
     redirect: false,
+    errorMessages: this.props.auth.errors as object
   };
 
   static getDerivedStateFromProps(nextProps: IProps) {
     return {
       isLoading : nextProps.auth.isLoading,
       auth: nextProps.auth.isAuthenticated,
+      errorMessages: nextProps.auth.errors,
       username: nextProps.auth.user && nextProps.auth.user.username
     }
   };
@@ -65,7 +67,7 @@ class Hello extends React.Component<IProps, {}> {
   };
 
   render() {
-    const { auth, email, password, isLoading, redirect } = this.state;
+    const { auth, email, password, isLoading, errorMessages, redirect } = this.state;
     const mode = process.env.NODE_ENV;
 
     if (redirect) {
@@ -88,6 +90,7 @@ class Hello extends React.Component<IProps, {}> {
                 email={email}
                 password={password}
                 isLoading={isLoading}
+                errorMessages={errorMessages}
                 handleInputs={this.handleInputs}
                 onClick={this.handleLogin}
               /> :

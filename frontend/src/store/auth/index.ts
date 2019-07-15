@@ -4,14 +4,14 @@ import { IUser, IAuth } from '../../models/user.model';
 type IAuthAction = {
   user: IUser;
   type: string;
-  error: string;
+  errors: any;
 };
 
 const initialState: IAuth = {
   isAuthenticated: false,
   isLoading: false,
   user: null,
-  error: ''
+  errors: ''
 };
 
 export function auth(state: IAuth = initialState, action: IAuthAction) {
@@ -33,7 +33,7 @@ export function auth(state: IAuth = initialState, action: IAuthAction) {
       return {
         ...state,
         isLoading: false,
-        error: action.error
+        ...action.errors
       };
     case authConstants.LOGOUT:
       return {
